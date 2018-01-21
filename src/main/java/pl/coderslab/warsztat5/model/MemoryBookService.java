@@ -9,14 +9,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MemoryBookService {
+	private static long nextId = 1L;
 	private List<Book> list;
 
 	public MemoryBookService() {
 		this.list = new ArrayList<>();
-		list.add(new Book(1L, "9788324631766", "Thinking in Java", "Bruce Eckel", "Helion", "programming"));
-		list.add(new Book(2L, "9788324627738", "Rusz glowa, Java.", "Sierra Kathy, Bates Bert", "Helion",
+		add(new Book(0L, "9788324631766", "Thinking in Java", "Bruce Eckel", "Helion", "programming"));
+		add(new Book(0L, "9788324627738", "Rusz glowa, Java.", "Sierra Kathy, Bates Bert", "Helion",
 				"programming"));
-		list.add(new Book(3L, "9780130819338", "Java 2. Podstawy", "Cay Horstmann, Gary Cornell", "Helion",
+		add(new Book(0L, "9780130819338", "Java 2. Podstawy", "Cay Horstmann, Gary Cornell", "Helion",
 				"programming"));
 	}
 
@@ -36,8 +37,15 @@ public class MemoryBookService {
 	}
 	
 	public void editBook(Book book) throws NoSuchElementException{
-		Book b = this.getById(book.getId());
-		b = book;
+		for(Book iterBook: this.list) {
+			if(iterBook.getId() == book.getId()) {
+				iterBook.setAuthor(book.getAuthor());
+				iterBook.setIsbn(book.getIsbn());
+				iterBook.setPublisher(book.getIsbn());
+				iterBook.setTitle(book.getTitle());
+				iterBook.setType(book.getType());
+			}
+		}
 	}
 
 	public void deleteBook(Book book) throws NoSuchElementException{
@@ -48,4 +56,12 @@ public class MemoryBookService {
 		Book b = this.getById(id);
 		this.list.remove(b);
 	}
+
+	public Book add(Book book) {
+		book.setId(nextId++);
+		this.list.add(book);
+		return book;
+	}
+	
+	
 }
